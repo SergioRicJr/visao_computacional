@@ -8,8 +8,8 @@ import pytesseract
 from pytesseract import Output
 import numpy as np
 import cv2 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe" 
+#arrumar caminho tesseract dependendo do computador
 
 
 
@@ -103,10 +103,10 @@ class planta_vigapilar:
 #adicionar funcao para criar pasta e guardar excel de vigas e pilares de cada obra
   def exportar_df(self):
     self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.n_cliente}.xlsx", index=False)
+  #criar pasta caso n exista baseado no nome e guardar arquivo, mudar nome da foto para isso 
 
 
 
-
-caminho_imagem = "PROJETO MONTAGEM FULVIO 4k final.jpg"
-planta = planta_vigapilar(caminho_imagem)
-planta.iniciar_processo()
+#caminho_imagem = "PROJETO MONTAGEM FULVIO 4k final.jpg"
+#planta = planta_vigapilar(caminho_imagem)
+#planta.iniciar_processo()
