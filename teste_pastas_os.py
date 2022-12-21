@@ -3,9 +3,10 @@ import re
 os.system("cls")
 
 pasta = os.path.abspath(".")
-a =  '  PLANTA-vp-Térreo-465-Fulvio.jpg'
-padrao_nome_planta = re.compile('^( )*(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)$')
+a =  'PLANTA-vp-Térreo-465-Fulvio.jpg'
 
+padrao_nome_planta = re.compile('^( )*(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)$')
+padrao_nome_pasta_df = re.complie('^(VIGAS)_(E)_(PILARES)_[\d]{3}')
 
 b = a.split('.')
 info_nome = b[0].split("-")
