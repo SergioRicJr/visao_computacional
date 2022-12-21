@@ -11,19 +11,27 @@ import cv2
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe" 
 #arrumar caminho tesseract dependendo do computador
 
+padrao_n_planta = re.compile('(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)')
+#a = re.finditer(padrao_n_planta, caminho)
+#nome_arquivo = []
+#for i in a:
+    #nome_arquivo.append(i[0])
+
 
 
 class planta_vigapilar:
   def __init__(self, caminho_img):
-    self.n_obra = input('Digite o número da obra: ')
-    self.n_cliente = input('Digite o nome do cliente: ')
-    self.pavimento = input('escreva o pavimento: ')
     self.caminho_img = caminho_img
+    info_nome = self.informacoes_nome()
+    self.pavimento = info_nome[2]
+    self.n_obra = info_nome[3]
+    self.nome_cliente = info_nome[4]
     self.vigas_tam = []
     self.vigas_nome = []
     self.v_x = []
     self.v_y = []
-    self.exre = {  
+    self.exre = { 
+        'padrao_n_planta': '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)',
         'p_nome_1': '^(V|v)[0-9]{1}',
         'p_nome_2': '^(V|v)[0-9]{2}',
         'p_vep':'^[0-9]{2}(x|X)[0-9]{2}$',
@@ -33,6 +41,15 @@ class planta_vigapilar:
         'p_nome_viga_completo': '^(V|v)[0-9]{1,2}[0-9]{2}(x|X)[0-9]{2}$'
     }
     self.min_conf = 0
+
+  def informacoes_nome(self):
+    a = re.finditer(padrao_n_planta, self.caminho_img)
+    for i in a:
+      self.nome_imagem = i[0]  
+    b = self.nome_imagem.split('.')
+    info_nome = b[0].split("-")
+    info_nome = list(map(lambda x: x.strip(), info_nome))
+    return info_nome
   
   def iniciar_processo(self):
     self.carregar_imagem()
@@ -102,11 +119,11 @@ class planta_vigapilar:
 #adicionar funcao para pegar nome do pavimento automaticamente
 #adicionar funcao para criar pasta e guardar excel de vigas e pilares de cada obra
   def exportar_df(self):
-    self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.n_cliente}.xlsx", index=False)
+    self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx", index=False)
   #criar pasta caso n exista baseado no nome e guardar arquivo, mudar nome da foto para isso 
 
 
 
-#caminho_imagem = "PROJETO MONTAGEM FULVIO 4k final.jpg"
-#planta = planta_vigapilar(caminho_imagem)
-#planta.iniciar_processo()
+caminho_imagem = "C:\Users\sergi\visao_computacional\Planta-vp-Térreo-465-Fulvio.jpg"
+planta = planta_vigapilar(caminho_imagem)
+planta.iniciar_processo()
