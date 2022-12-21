@@ -116,7 +116,6 @@ class planta_vigapilar:
     self.df.drop_duplicates(inplace=True)
     self.df.reset_index(drop=True, inplace=True)
 
-#adicionar funcao para pegar nome do pavimento automaticamente
 #adicionar funcao para criar pasta e guardar excel de vigas e pilares de cada obra
   def exportar_df(self):
     self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx", index=False)
@@ -124,6 +123,6 @@ class planta_vigapilar:
 
 
 
-caminho_imagem = "C:\Users\sergi\visao_computacional\Planta-vp-Térreo-465-Fulvio.jpg"
+caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 planta = planta_vigapilar(caminho_imagem)
 planta.iniciar_processo()
