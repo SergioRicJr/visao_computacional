@@ -1,14 +1,3 @@
-
-#### COMO RESOLVER PROBELMA E FAZER TUDO AUTOMATICAMENTE DENTRO DA MESMA CLASSE??????
-
-
-
-
-
-
-
-
-
 import os
 os.system('cls')
 import re
@@ -51,6 +40,7 @@ class planta_vigapilar:
     }
     self.min_conf = 0
     self.lista_excel_pronto = []
+    self.lista_arquivos = os.listdir(os.getcwd())
   
   def iniciar_processo_individual(self):
     self.carregar_imagem()
@@ -69,6 +59,10 @@ class planta_vigapilar:
     self.listar_arquivos_prontos(os.getcwd())
     self.lista_arquivos = os.listdir(os.getcwd())
     for arquivo in self.lista_arquivos:
+        self.vigas_tam = []
+        self.vigas_nome = []
+        self.v_x = []
+        self.v_y = []
         if re.match(self.exre['padrao_nome_planta_2'], arquivo):
             a =  arquivo
             b = a.split('.')
@@ -90,10 +84,10 @@ class planta_vigapilar:
                 self.criar_df()
                 self.ordem_df()
                 self.exportar_df()
-                if "VIGAS_E_PILARES_{n_obra}_{nome_cliente}" not in self.lista_arquivos:
-                  os.mkdir(f'C:/Users/sergi/visao_computacional/VIGAS_E_PILARES_{n_obra}_{nome_cliente.upper()}')
-                os.rename(f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx')   
-                os.rename(f'Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg')
+                #if f"VIGAS_E_PILARES_{n_obra}_{nome_cliente.upper()}" not in self.lista_arquivos:
+                  #os.mkdir(f'C:/Users/sergi/visao_computacional/VIGAS_E_PILARES_{n_obra}_{nome_cliente.upper()}')
+                #os.rename(f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx')   
+                #os.rename(f'Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg')
   
   def carregar_imagem(self):
     self.caminho_img = input('Digite o nome da imagem: ')
@@ -160,10 +154,13 @@ class planta_vigapilar:
     self.df.drop_duplicates(inplace=True)
     self.df.reset_index(drop=True, inplace=True)
 
-#adicionar funcao para criar pasta e guardar excel de vigas e pilares de cada obra
-  def exportar_df(self):
+
+  def exportar_df(self): #implementar regex em todos os exemplos para melhorar tratamento de erros == urgente
     self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx", index=False)
-  #criar pasta caso n exista baseado no nome e guardar arquivo, mudar nome da foto para isso 
+    if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in self.lista_arquivos:
+      os.mkdir(f'C:/Users/sergi/visao_computacional/VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
+    os.rename(f'vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx', f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente}/vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx')   
+    os.rename(f'Planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg', f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente}/Planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
 
   def listar_arquivos_prontos(self, pasta):
     self.lista_arquivos = os.listdir(pasta)
