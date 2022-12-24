@@ -1,3 +1,14 @@
+
+#### COMO RESOLVER PROBELMA E FAZER TUDO AUTOMATICAMENTE DENTRO DA MESMA CLASSE??????
+
+
+
+
+
+
+
+
+
 import os
 os.system('cls')
 import re
@@ -20,17 +31,13 @@ padrao_n_planta = re.compile('(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d
 
 
 class planta_vigapilar:
-  def __init__(self, caminho_img):
-    self.caminho_img = caminho_img
-    info_nome = self.informacoes_nome()
-    self.pavimento = info_nome[2]
-    self.n_obra = info_nome[3]
-    self.nome_cliente = info_nome[4]
+  def __init__(self):
     self.vigas_tam = []
     self.vigas_nome = []
     self.v_x = []
     self.v_y = []
     self.exre = {
+        'padrao_nome_planta_2': '^(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)$',
         'padrao_nao_pastas': '^[\w\W]+\.[A-Za-z]+$',
         'padrao_nome_excel_generico': '^vigas_[A-Za-zÀ-Úà-ú]+[0-9]?_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx$',
         'padrao_n_planta': '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)',
@@ -44,17 +51,8 @@ class planta_vigapilar:
     }
     self.min_conf = 0
     self.lista_excel_pronto = []
-
-  def informacoes_nome(self):
-    a = re.finditer(padrao_n_planta, self.caminho_img)
-    for i in a:
-      self.nome_imagem = i[0]  
-    b = self.nome_imagem.split('.')
-    info_nome = b[0].split("-")
-    info_nome = list(map(lambda x: x.strip(), info_nome))
-    return info_nome
   
-  def iniciar_processo(self):
+  def iniciar_processo_individual(self):
     self.carregar_imagem()
     self.ler_imagem(self.img)
     self.add_info_list(self.resultado)
@@ -62,12 +60,55 @@ class planta_vigapilar:
     self.ler_imagem(self.img_virada)
     self.add_info_list(self.resultado)
     self.dividir_tam_viga()
+    self.informacoes_nome()
     self.criar_df()
     self.ordem_df()
     self.exportar_df()
+
+  def ler_plantas_automaticamente(self):
+    self.listar_arquivos_prontos(os.getcwd())
+    self.lista_arquivos = os.listdir(os.getcwd())
+    for arquivo in self.lista_arquivos:
+        if re.match(self.exre['padrao_nome_planta_2'], arquivo):
+            a =  arquivo
+            b = a.split('.')
+            info_nome = b[0].split("-")
+            info_nome = list(map(lambda x: x.strip(), info_nome))
+            pavimento = info_nome[2]
+            n_obra = info_nome[3]
+            nome_cliente = info_nome[4]
+            if f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx' not in self.lista_excel_pronto:
+                self.caminho_img = arquivo
+                self.img = cv2.imread(self.caminho_img)
+                self.ler_imagem(self.img)
+                self.add_info_list(self.resultado)
+                self.muda_lado_90()
+                self.ler_imagem(self.img_virada)
+                self.add_info_list(self.resultado)
+                self.dividir_tam_viga()
+                self.informacoes_nome()
+                self.criar_df()
+                self.ordem_df()
+                self.exportar_df()
+                if "VIGAS_E_PILARES_{n_obra}_{nome_cliente}" not in self.lista_arquivos:
+                  os.mkdir(f'C:/Users/sergi/visao_computacional/VIGAS_E_PILARES_{n_obra}_{nome_cliente.upper()}')
+                os.rename(f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx')   
+                os.rename(f'Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg')
   
   def carregar_imagem(self):
+    self.caminho_img = input('Digite o nome da imagem: ')
     self.img = cv2.imread(self.caminho_img)
+  
+  def informacoes_nome(self):
+    a = re.finditer(padrao_n_planta, self.caminho_img)
+    for i in a:
+      self.nome_imagem = i[0]  
+    b = self.nome_imagem.split('.')
+    info_nome = b[0].split("-")
+    info_nome = list(map(lambda x: x.strip(), info_nome))
+    self.pavimento = info_nome[2]
+    self.n_obra = info_nome[3]
+    self.nome_cliente = info_nome[4]
   
   def ler_imagem(self, img):
     self.config = r'--psm 11'
@@ -125,20 +166,25 @@ class planta_vigapilar:
   #criar pasta caso n exista baseado no nome e guardar arquivo, mudar nome da foto para isso 
 
   def listar_arquivos_prontos(self, pasta):
-    lista_arquivos = os.listdir(pasta)
-    for arquivo in lista_arquivos:
+    self.lista_arquivos = os.listdir(pasta)
+    for arquivo in self.lista_arquivos:
         if not re.match(self.exre['padrao_nao_pastas'], arquivo) and arquivo != '.git':
-            self.recursao(arquivo)
+            self.listar_arquivos_prontos(arquivo)
         if re.match(self.exre['padrao_nome_excel_generico'], arquivo):
             self.lista_excel_pronto.append(arquivo)
 
 
+#caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
+planta = planta_vigapilar()
+#planta.carregar_imagem()
+#planta.listar_arquivos_prontos(os.getcwd())
+#print(planta.lista_excel_pronto)
+#planta.iniciar_processo_individual()
+planta.ler_plantas_automaticamente()
 
-caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
-planta = planta_vigapilar(caminho_imagem)
-#planta.iniciar_processo()
 
-pasta = os.getcwd()
-planta.recursao(pasta)
-print(planta.lista_excel_pronto)
 
+
+#pasta = os.getcwd()
+#planta.listar_arquivos_prontos(pasta)
+#print(planta.lista_excel_pronto)

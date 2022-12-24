@@ -103,23 +103,4 @@ mover_arquivos()
 
 
 
-class automacao_arquivos(planta_vigapilar):
-    def __init__(self):
-        super.__init__()
-     
-    def isso(self):
-        lista_arquivos = os.listdir(pasta)
-        for arquivo in lista_arquivos:
-            if re.match(padrao_nome_planta_2, arquivo):
-                a =  arquivo
-                b = a.split('.')
-                info_nome = b[0].split("-")
-                info_nome = list(map(lambda x: x.strip(), info_nome))
-                
-                pavimento = info_nome[2]
-                n_obra = info_nome[3]
-                nome_cliente = info_nome[4]
-                if f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx' not in lista_excel_pronto:
-                    planta.iniciar_processo()
-                    os.rename(f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx', f'VIGAS_E_PILARES_465_FULVIO/vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx')   
-                    os.rename(f'Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg', f'VIGAS_E_PILARES_465_FULVIO/Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg') 
+ 
