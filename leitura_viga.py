@@ -30,7 +30,9 @@ class planta_vigapilar:
     self.vigas_nome = []
     self.v_x = []
     self.v_y = []
-    self.exre = { 
+    self.exre = {
+        'padrao_nao_pastas': '^[\w\W]+\.[A-Za-z]+$',
+        'padrao_nome_excel_generico': '^vigas_[A-Za-zÀ-Úà-ú]+[0-9]?_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx$',
         'padrao_n_planta': '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)',
         'p_nome_1': '^(V|v)[0-9]{1}',
         'p_nome_2': '^(V|v)[0-9]{2}',
@@ -41,6 +43,7 @@ class planta_vigapilar:
         'p_nome_viga_completo': '^(V|v)[0-9]{1,2}[0-9]{2}(x|X)[0-9]{2}$'
     }
     self.min_conf = 0
+    self.lista_excel_pronto = []
 
   def informacoes_nome(self):
     a = re.finditer(padrao_n_planta, self.caminho_img)
@@ -62,7 +65,7 @@ class planta_vigapilar:
     self.criar_df()
     self.ordem_df()
     self.exportar_df()
-
+  
   def carregar_imagem(self):
     self.img = cv2.imread(self.caminho_img)
   
@@ -121,8 +124,21 @@ class planta_vigapilar:
     self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx", index=False)
   #criar pasta caso n exista baseado no nome e guardar arquivo, mudar nome da foto para isso 
 
+  def listar_arquivos_prontos(self, pasta):
+    lista_arquivos = os.listdir(pasta)
+    for arquivo in lista_arquivos:
+        if not re.match(self.exre['padrao_nao_pastas'], arquivo) and arquivo != '.git':
+            self.recursao(arquivo)
+        if re.match(self.exre['padrao_nome_excel_generico'], arquivo):
+            self.lista_excel_pronto.append(arquivo)
+
 
 
 caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 planta = planta_vigapilar(caminho_imagem)
 #planta.iniciar_processo()
+
+pasta = os.getcwd()
+planta.recursao(pasta)
+print(planta.lista_excel_pronto)
+
