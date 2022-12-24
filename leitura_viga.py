@@ -171,15 +171,21 @@ class planta_vigapilar:
             self.lista_excel_pronto.append(arquivo)
 
 
-#caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 planta = planta_vigapilar()
+planta.ler_plantas_automaticamente()
+#caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 #planta.carregar_imagem()
 #planta.listar_arquivos_prontos(os.getcwd())
 #print(planta.lista_excel_pronto)
 #planta.iniciar_processo_individual()
-planta.ler_plantas_automaticamente()
 
 
+# padrao_nome_planta = re.compile('^( )*(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)( )*$')
+# padrao_nome_pasta_df = re.compile('^(VIGAS)_(E)_(PILARES)_[\d]{3}')
+
+# padrao_nome_planta_2 = re.compile('^(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)$')
+# padrao_nao_pastas = re.compile('^[\w\W]+\.[A-Za-z]+$')
+# padrao_nome_excel_generico = re.compile('^vigas_[A-Za-zÀ-Úà-ú]+[0-9]?_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx$')
 
 
 #pasta = os.getcwd()
