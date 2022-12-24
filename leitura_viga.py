@@ -125,4 +125,4 @@ class planta_vigapilar:
 
 caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 planta = planta_vigapilar(caminho_imagem)
-planta.iniciar_processo()
+#planta.iniciar_processo()
