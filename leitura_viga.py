@@ -167,9 +167,10 @@ class planta_vigapilar:
     self.df.drop_duplicates(inplace=True)
     self.df.reset_index(drop=True, inplace=True)
 
-  def exportar_df(self): #implementar regex em todos os exemplos para melhorar tratamento de erros?
+  def exportar_df(self):
+    lista_arquivos = os.listdir(os.getcwd())
     self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx", index=False)
-    if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in self.lista_arquivos:
+    if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in lista_arquivos:
       os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
     os.rename(f'vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx', f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx')           
     os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
@@ -182,6 +183,7 @@ class planta_vigapilar:
         elif re.match(self.exre['padrao_nome_excel_generico'], arquivo):
             self.lista_excel_pronto.append(arquivo)
 
+#lembrar de variaveis locais e globais, existem ate em relacao a funcoes dentro de classe
 
 planta = planta_vigapilar()
 # planta.carregar_imagem()
@@ -193,12 +195,12 @@ planta = planta_vigapilar()
 # planta.carregar_imagem()
 # planta.listar_arquivos_prontos(planta.diretorio)
 # print(planta.lista_excel_pronto)
-planta.ler_plantas_automaticamente()
+#planta.ler_plantas_automaticamente()
 # caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 # planta.carregar_imagem()
 # planta.listar_arquivos_prontos(os.getcwd())
 # print(planta.lista_excel_pronto)
-#planta.iniciar_processo_individual()
+planta.iniciar_processo_individual()
 
 
 #testar orientacao das plotagens
