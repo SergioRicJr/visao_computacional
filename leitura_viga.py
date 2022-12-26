@@ -44,10 +44,11 @@ class planta_vigapilar:
     self.min_conf = 0
     self.lista_excel_pronto = []
     self.diretorio = os.getcwd()
-    self.lista_arquivos = os.listdir(self.diretorio)
+    self.lista_arquivos = os.listdir(os.getcwd())
   
   def iniciar_processo_individual(self):  #algo de errado aqui, o not do criar pasta esta invertido
     self.listar_arquivos_prontos(self.diretorio)
+    self.lista_arquivos = os.listdir(os.getcwd())
     self.carregar_imagem()
     self.informacoes_nome()
     if not f'vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx' in self.lista_excel_pronto:  
@@ -197,7 +198,7 @@ planta.ler_plantas_automaticamente()
 # planta.carregar_imagem()
 # planta.listar_arquivos_prontos(os.getcwd())
 # print(planta.lista_excel_pronto)
-# planta.iniciar_processo_individual()
+#planta.iniciar_processo_individual()
 
 
 #testar orientacao das plotagens
