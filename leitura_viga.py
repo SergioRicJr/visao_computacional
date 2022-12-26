@@ -38,14 +38,15 @@ class planta_vigapilar:
         'p_vep_colado': '[0-9]{2}(x|X)[0-9]{2}',
         'p_nome_viga':  '^(V|v)[0-9]{1,2}$',
         'p_nome_viga_colado': '(V|v)[0-9]{1,2}',
-        'p_nome_viga_completo': '^(V|v)[0-9]{1,2}[0-9]{2}(x|X)[0-9]{2}$'
+        'p_nome_viga_completo': '^(V|v)[0-9]{1,2}[0-9]{2}(x|X)[0-9]{2}$',
+        #'padrao_n_planta_correto': f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{self.pavimento}-{self.n_obra}-{self.nome_cliente}\.(jpg|png|pdf)'
     }
     self.min_conf = 0
     self.lista_excel_pronto = []
     self.diretorio = os.getcwd()
     self.lista_arquivos = os.listdir(self.diretorio)
   
-  def iniciar_processo_individual(self):
+  def iniciar_processo_individual(self):  #algo de errado aqui, o not do criar pasta esta invertido
     self.listar_arquivos_prontos(self.diretorio)
     self.carregar_imagem()
     self.informacoes_nome()
@@ -60,7 +61,7 @@ class planta_vigapilar:
       self.ordem_df()
       self.exportar_df()
     else:
-      print('O arquivo já existe')
+      print('O excel desse arquivo já existe')
 
   def ler_plantas_automaticamente(self):
     self.listar_arquivos_prontos(os.getcwd())
@@ -104,6 +105,7 @@ class planta_vigapilar:
     a = re.finditer(padrao_n_planta, self.caminho_img)
     for i in a:
       self.nome_imagem = i[0]  
+      #self.nome_imagem = self.nome_imagem.lower() sem necessidade?
     b = self.nome_imagem.split('.')
     info_nome = b[0].split("-")
     info_nome = list(map(lambda x: x.strip(), info_nome))
@@ -164,14 +166,12 @@ class planta_vigapilar:
     self.df.drop_duplicates(inplace=True)
     self.df.reset_index(drop=True, inplace=True)
 
-
-  def exportar_df(self): #implementar regex em todos os exemplos para melhorar tratamento de erros == urgente
+  def exportar_df(self): #implementar regex em todos os exemplos para melhorar tratamento de erros?
     self.df.to_excel(f"vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx", index=False)
-    if not f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" in self.lista_arquivos:
-      os.mkdir(os.path.join(self.diretorio ,f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}'))
-    else:
-      os.rename(f'vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx', f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx')   
-      os.rename(f'Planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg', f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/Planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
+    if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in self.lista_arquivos:
+      os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
+    os.rename(f'vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx', f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx')           
+    os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
 
   def listar_arquivos_prontos(self, pasta):
     self.lista_arquivos = os.listdir(pasta)
@@ -184,19 +184,20 @@ class planta_vigapilar:
 
 planta = planta_vigapilar()
 # planta.carregar_imagem()
+# planta.printa()
 # planta.informacoes_nome()
 # print(planta.n_obra, planta.nome_cliente, planta.pavimento, sep='\n')
 # print(f"VIGAS_E_PILARES_{planta.n_obra}_{planta.nome_cliente.upper()}")
 # print(planta.lista_arquivos)
-# #planta.carregar_imagem()
-#planta.listar_arquivos_prontos(planta.diretorio)
-#print(planta.lista_excel_pronto)
-#planta.ler_plantas_automaticamente()
-#caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
-#planta.carregar_imagem()
+# planta.carregar_imagem()
+# planta.listar_arquivos_prontos(planta.diretorio)
+# print(planta.lista_excel_pronto)
+planta.ler_plantas_automaticamente()
+# caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
+# planta.carregar_imagem()
 # planta.listar_arquivos_prontos(os.getcwd())
 # print(planta.lista_excel_pronto)
-planta.iniciar_processo_individual()
+# planta.iniciar_processo_individual()
 
 
 #testar orientacao das plotagens
