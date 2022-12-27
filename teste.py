@@ -1,0 +1,54 @@
+import re
+import pandas as pd
+import os
+os.system('cls')
+
+# padrao_nao_pastas = '^[\w\W]+\.[A-Za-z]+$',
+# padrao_nome_excel_generico = '^vigas_[A-Za-zÀ-Úà-ú_]+[0-9]?_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx$'
+
+# nome = 'vigas_TERREO_CASA_475_JORGE.xlsx'
+# print(re.match(padrao_nome_excel_generico, nome))
+
+
+# def listar_arquivos_prontos(self, pasta):
+#     self.lista_arquivos = os.listdir(pasta)
+#     for arquivo in self.lista_arquivos:
+#         if not re.match(self.exre['padrao_nao_pastas'], arquivo) and arquivo != '.git':
+#             self.listar_arquivos_prontos(arquivo)
+#         if re.match(self.exre['padrao_nome_excel_generico'], arquivo):
+#             self.lista_excel_pronto.append(arquivo)
+# dic = [['V82', '14', '25'], ['V76', '14', '25'], ['V55', '14', '25']]
+# df = pd.DataFrame(dic)
+
+# # for i in df['Vigas']:
+# #     print(i)
+
+# # with open("vigas_superior_472_carlos.xlsx", "r+") as arq:
+# #     for i in dic: isso corrompe arquivo excel.
+# #         for x in i:    
+# #             print(x)
+# #             arq.write(x)
+
+# with pd.ExcelWriter("vigas_superior_472_carlos.xlsx", engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
+#     df.to_excel(writer, sheet_name='Sheet1', startrow=writer.sheets["Sheet1"].max_row, index=False, header=False)
+
+# # with pd.ExcelWriter("test.xlsx", engine='openpyxl', mode='a') as writer:
+#     df.to_excel(writer)
+
+
+# with pd.ExcelWriter("existing_file_name.xlsx", engine="openpyxl", mode="a") as writer:
+#     df.to_excel(writer, sheet_name="name", startrow=num, startcol=num)
+
+# writer = pd.ExcelWriter('vigas_superior_472_carlos.xlsx', engine='xlsxwriter', mode='a', if_sheet_exists='overlay' )
+# df.to_excel(writer, sheet_name="F1", startrow=writer.sheets["F1"].max_row, index=False, header=False)
+
+
+# RE funciona com f string?
+tt = 'TERREO'
+
+n_pattern = f'vigas_{tt}[0-9]?_[0-9]{{3}}'#[0-9]'#+'_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx'
+padrao_nome_excel_generico = re.compile(n_pattern)
+print(n_pattern)
+
+nome = 'vigas_TERREO_475_JORGE.xlsx'
+print(re.match(padrao_nome_excel_generico, nome))

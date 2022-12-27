@@ -47,6 +47,7 @@ class planta_vigapilar:
     self.lista_arquivos = os.listdir(os.getcwd())
   
   def iniciar_processo_individual(self):  #algo de errado aqui, o not do criar pasta esta invertido
+    lista_arquivos = os.listdir(os.getcwd())
     self.listar_arquivos_prontos(self.diretorio)
     self.lista_arquivos = os.listdir(os.getcwd())
     self.carregar_imagem()
@@ -62,8 +63,21 @@ class planta_vigapilar:
       self.ordem_df()
       self.exportar_df()
     else:
-      print('O excel desse arquivo já existe')
-
+      print('O arquivo já existe')
+      self.ler_imagem(self.img)
+      self.add_info_list(self.resultado)
+      self.muda_lado_90()
+      self.ler_imagem(self.img_virada)
+      self.add_info_list(self.resultado)
+      self.dividir_tam_viga()
+      self.criar_df()
+      self.ordem_df()
+      if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in lista_arquivos:
+        os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
+      os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
+      with pd.ExcelWriter("VIGAS_E_PILARES_472_CARLOS\\vigas_superior_472_carlos.xlsx", engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
+        self.df.to_excel(writer, sheet_name='Sheet1', startrow=writer.sheets["Sheet1"].max_row, index=False, header=False)
+  
   def ler_plantas_automaticamente(self):
     self.listar_arquivos_prontos(os.getcwd())
     self.lista_arquivos = os.listdir(os.getcwd())
@@ -97,10 +111,12 @@ class planta_vigapilar:
                   #os.mkdir(f'C:/Users/sergi/visao_computacional/VIGAS_E_PILARES_{n_obra}_{nome_cliente.upper()}')
                 #os.rename(f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx')   
                 #os.rename(f'Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg')
-  
+            else: 
+              print('O arquivo já existe')
   def carregar_imagem(self):
     self.caminho_img = input('Digite o nome da imagem: ')
     self.img = cv2.imread(self.caminho_img)
+    self.img = cv2.cvtColor(self.img, cv2.COLOR_BGRA2GRAY)
   
   def informacoes_nome(self):
     a = re.finditer(padrao_n_planta, self.caminho_img)
@@ -195,12 +211,12 @@ planta = planta_vigapilar()
 # planta.carregar_imagem()
 # planta.listar_arquivos_prontos(planta.diretorio)
 # print(planta.lista_excel_pronto)
-planta.ler_plantas_automaticamente()
+# planta.ler_plantas_automaticamente()
 # caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 # planta.carregar_imagem()
 # planta.listar_arquivos_prontos(os.getcwd())
 # print(planta.lista_excel_pronto)
-# planta.iniciar_processo_individual()
+planta.iniciar_processo_individual()
 
 
 #testar orientacao das plotagens
