@@ -195,12 +195,12 @@ planta = planta_vigapilar()
 # planta.carregar_imagem()
 # planta.listar_arquivos_prontos(planta.diretorio)
 # print(planta.lista_excel_pronto)
-#planta.ler_plantas_automaticamente()
+planta.ler_plantas_automaticamente()
 # caminho_imagem = r"C:\Users\sergi\visao_computacional\Planta-vp-Terreo-465-Fulvio.jpg"
 # planta.carregar_imagem()
 # planta.listar_arquivos_prontos(os.getcwd())
 # print(planta.lista_excel_pronto)
-planta.iniciar_processo_individual()
+# planta.iniciar_processo_individual()
 
 
 #testar orientacao das plotagens
