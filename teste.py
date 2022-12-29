@@ -3,6 +3,10 @@ import pandas as pd
 import os
 os.system('cls')
 
+#CANCELAR TRATAMENTO DE ERRO DE NOME DE IMAGEM, DEIXAR SO ADICIONAR
+
+
+
 # padrao_nao_pastas = '^[\w\W]+\.[A-Za-z]+$',
 # padrao_nome_excel_generico = '^vigas_[A-Za-zÀ-Úà-ú_]+[0-9]?_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx$'
 
@@ -54,23 +58,30 @@ nome = 'vigas_TERREO_475_JORGE.xlsx'
 
 pavimento = 'terreo'
 
-numero_foto_obra = 2
-n_obra = 465
+numero_foto_obra = '2'
+n_obra = '465'
 nome_cliente = 'fulvio'
 
 
-padrao_n_planta_correto = f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{pavimento}{numero_foto_obra}-{n_obra}-{nome_cliente}\.(jpg|png|pdf)'
+padrao_n_planta_correto = f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{pavimento}({numero_foto_obra})?-{n_obra}-{nome_cliente}\.(jpg|png|pdf)'
 padrao_n_planta_corr = f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{pavimento}-{n_obra}-{nome_cliente}\.(jpg|png|pdf)'
+#padrao_n_planta_correto = f'(Planta|planta|PLANTA)-(vp|VP|Vp)-terreo2-465-fulvio\.(jpg|png|pdf)'
 
-lista_de_imagens_em_pasta = ['planta-vp-terreo2-465-fulvio.jpg','planta-vp-terreo2-465-fulvio.jpg', 'planta-vp-terreo-465-fulvio.jpg','Planta-vp-terreo3-465-fulvio.jpg', 'planta-vp-terreo-465-fulvio.jpg' ]
+lista_de_imagens_em_pasta = ['planta-vp-terreo2-465-fulvio.jpg','planta-vp-terreo2-465-fulvio.jpg', 'planta-vp-terreo-465-fulvio.jpg','Planta-vp-terreo-465-fulvio.jpg', 'planta-vp-terreo-465-fulvio.jpg' ]
 #lista_de_imagens_em_pasta = []
 junto = str(lista_de_imagens_em_pasta).strip('[]')
 junto = re.sub("[',]", " ",junto)
 print(junto)
-lista_de_imagens_em_pasta = []
-a = re.findall(padrao_n_planta_correto, junto)
+#lista_de_imagens_em_pasta = []
 qtde = 0
-print(a)
+for i in lista_de_imagens_em_pasta:
+    a = re.match(padrao_n_planta_correto, i)
+    if a != None:
+        qtde +=1
+    print(a)
+print(qtde)
+# qtde = 0
+# print(a)
     
         
 #     qtde += 1
