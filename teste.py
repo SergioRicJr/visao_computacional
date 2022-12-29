@@ -48,7 +48,69 @@ tt = 'TERREO'
 
 n_pattern = f'vigas_{tt}[0-9]?_[0-9]{{3}}'#[0-9]'#+'_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx'
 padrao_nome_excel_generico = re.compile(n_pattern)
-print(n_pattern)
+# print(n_pattern)
 
 nome = 'vigas_TERREO_475_JORGE.xlsx'
-print(re.match(padrao_nome_excel_generico, nome))
+
+pavimento = 'terreo'
+
+numero_foto_obra = 2
+n_obra = 465
+nome_cliente = 'fulvio'
+
+
+padrao_n_planta_correto = f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{pavimento}{numero_foto_obra}-{n_obra}-{nome_cliente}\.(jpg|png|pdf)'
+padrao_n_planta_corr = f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{pavimento}-{n_obra}-{nome_cliente}\.(jpg|png|pdf)'
+
+lista_de_imagens_em_pasta = ['planta-vp-terreo2-465-fulvio.jpg','planta-vp-terreo2-465-fulvio.jpg', 'planta-vp-terreo-465-fulvio.jpg','Planta-vp-terreo3-465-fulvio.jpg', 'planta-vp-terreo-465-fulvio.jpg' ]
+#lista_de_imagens_em_pasta = []
+junto = str(lista_de_imagens_em_pasta).strip('[]')
+junto = re.sub("[',]", " ",junto)
+print(junto)
+lista_de_imagens_em_pasta = []
+a = re.findall(padrao_n_planta_correto, junto)
+qtde = 0
+print(a)
+    
+        
+#     qtde += 1
+# print(qtde)
+
+
+
+
+# def essaaqui():
+#     a = re.finditer(padrao_n_planta_corr, junto)
+#     qtde_sem = 0
+#     for i in a:
+#         print(i[0])
+#         qtde_sem += 1
+#     print(qtde_sem)
+#     if qtde_sem >1:
+#         print('esse arquivo já existe na pasta')
+#         exit() #funciona
+#     print('oi')
+#     print('ainda estou aqui')
+
+# essaaqui()
+
+
+# padrao_n_planta = re.compile('(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)')
+# padrao_n_planta_cnumero = '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}[0-9]{1}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)'
+
+# caminho_img = "planta-vp-superior2-472-carlos.jpg"
+# a = re.finditer(padrao_n_planta, caminho_img)
+# for i in a:
+#     nome_imagem = i[0]
+#     b = nome_imagem.split('.')
+#     info_nome = b[0].split("-")
+#     info_nome = list(map(lambda x: x.strip(), info_nome))
+#     #padrao_nome_planta_cnumero = '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}[0-9]{1}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)'
+#     pavimento = info_nome[2]
+#     n_obra = info_nome[3]
+#     nome_cliente = info_nome[4]
+#     if re.match('[\w\W_]{3,40}[0-9]{1}', info_nome[2]):
+#         numero_foto_obra = pavimento[-1]
+#         pavimento = pavimento[:-1]
+
+#print(pavimento, n_obra, nome_cliente, numero_foto_obra, sep='\n')

@@ -31,7 +31,7 @@ class planta_vigapilar:
         'padrao_nome_planta_2': '^(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)$',
         'padrao_nao_pastas': '^[\w\W]+\.[A-Za-z]+$',
         'padrao_nome_excel_generico': '^vigas_[A-Za-zÀ-Úà-ú_\s]+[0-9]?_[0-9]{3}_[A-Za-zÀ-Úà-ú]+\.xlsx$',
-        'padrao_n_planta': '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)',
+        'padrao_n_planta': '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}[0-9]?-[\d]{3}-[\w\W]+\.(jpg|png|pdf)',
         'p_nome_1': '^(V|v)[0-9]{1}',
         'p_nome_2': '^(V|v)[0-9]{2}',
         'p_vep':'^[0-9]{2}(x|X)[0-9]{2}$',
@@ -39,6 +39,7 @@ class planta_vigapilar:
         'p_nome_viga':  '^(V|v)[0-9]{1,2}$',
         'p_nome_viga_colado': '(V|v)[0-9]{1,2}',
         'p_nome_viga_completo': '^(V|v)[0-9]{1,2}[0-9]{2}(x|X)[0-9]{2}$',
+      # 'padrao_excel_extra_append': f'vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx'
         #'padrao_n_planta_correto': f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{self.pavimento}-{self.n_obra}-{self.nome_cliente}\.(jpg|png|pdf)'
     }
     self.min_conf = 0
@@ -62,21 +63,24 @@ class planta_vigapilar:
       self.criar_df()
       self.ordem_df()
       self.exportar_df()
+    # elif 
+    #   self.ler_imagem(self.img)
+    #   self.add_info_list(self.resultado)
+    #   self.muda_lado_90()
+    #   self.ler_imagem(self.img_virada)
+    #   self.add_info_list(self.resultado)
+    #   self.dividir_tam_viga()
+    #   self.criar_df()
+    #   self.ordem_df()
+    #   if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in lista_arquivos:
+    #     os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
+    #   os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
+    #   with pd.ExcelWriter(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}\\vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx', engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
+    #     self.df.to_excel(writer, sheet_name='Sheet1', startrow=writer.sheets["Sheet1"].max_row, index=False, header=False)
+    
     else:
       print('O arquivo já existe')
-      self.ler_imagem(self.img)
-      self.add_info_list(self.resultado)
-      self.muda_lado_90()
-      self.ler_imagem(self.img_virada)
-      self.add_info_list(self.resultado)
-      self.dividir_tam_viga()
-      self.criar_df()
-      self.ordem_df()
-      if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in lista_arquivos:
-        os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
-      os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
-      with pd.ExcelWriter("VIGAS_E_PILARES_472_CARLOS\\vigas_superior_472_carlos.xlsx", engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
-        self.df.to_excel(writer, sheet_name='Sheet1', startrow=writer.sheets["Sheet1"].max_row, index=False, header=False)
+      
   
   def ler_plantas_automaticamente(self):
     self.listar_arquivos_prontos(os.getcwd())
@@ -126,9 +130,14 @@ class planta_vigapilar:
     b = self.nome_imagem.split('.')
     info_nome = b[0].split("-")
     info_nome = list(map(lambda x: x.strip(), info_nome))
+    #padrao_nome_planta_cnumero = '(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}[0-9]{1}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)'
+    #if re.match(padrao_nome_planta_cnumero, info_nome[2])
     self.pavimento = info_nome[2]
     self.n_obra = info_nome[3]
     self.nome_cliente = info_nome[4]
+    if re.match('[\w\W_]{3,40}[0-9]{1}', info_nome[2]):
+        self.numero_foto_obra = self.pavimento[-1]
+        self.pavimento = self.pavimento[:-1]
   
   def ler_imagem(self, img):
     self.config = r'--psm 11'
