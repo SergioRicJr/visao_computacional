@@ -13,13 +13,21 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 #usar sempre alta definicao ---- 13500X13500 DEU CERTO
 #usar '_' para dividir nomes do pavimento -- ex terreo_interno_2
 
-padrao_n_planta = re.compile('(Planta|planta|PLANTA)-(vp|VP|Vp)-[\w\W_]{3,40}-[\d]{3}-[\w\W]+\.(jpg|png|pdf)')
-#a = re.finditer(padrao_n_planta, caminho)
-#nome_arquivo = []
-#for i in a:
-    #nome_arquivo.append(i[0])
 
+#EXPERENCIA DO USUARIO --- 
 
+# escolha = int(input("""Digite:
+#                         1 - Verificar se a imagem já foi lida anteriormente
+#                         2 - Ler uma única imagem
+#                         3 - Ler todas as imagens na pasta
+#                         """))
+
+# if escolha == 1:
+#   pass
+# if escolha == 2:
+#   pass
+# if escolha == 3:
+#   pass
 
 class planta_vigapilar:
   def __init__(self):
@@ -74,8 +82,8 @@ class planta_vigapilar:
       self.ordem_df() 
       if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in lista_arquivos: #TRANSFORMAR ISSO EM FUNCAO
         os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
-      os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/{self.caminho_img}') 
-      with pd.ExcelWriter("VIGAS_E_PILARES_472_CARLOS\\vigas_superior_472_carlos.xlsx", engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
+      os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
+      with pd.ExcelWriter(f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}\\vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.jpg", engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
         self.df.to_excel(writer, sheet_name='Sheet1', startrow=writer.sheets["Sheet1"].max_row, index=False, header=False)
   
   def ler_plantas_automaticamente(self):
@@ -107,16 +115,13 @@ class planta_vigapilar:
                 self.criar_df()
                 self.ordem_df()
                 self.exportar_df()
-                #if f"VIGAS_E_PILARES_{n_obra}_{nome_cliente.upper()}" not in self.lista_arquivos:
-                  #os.mkdir(f'C:/Users/sergi/visao_computacional/VIGAS_E_PILARES_{n_obra}_{nome_cliente.upper()}')
-                #os.rename(f'vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx')   
-                #os.rename(f'Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg', f'VIGAS_E_PILARES_{n_obra}_{nome_cliente}/Planta-vp-{pavimento}-{n_obra}-{nome_cliente}.jpg')
+
             else: 
               print('O arquivo já existe')
               if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in self.lista_arquivos:
                 os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
-              os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/self.caminho_img') 
-              with pd.ExcelWriter("VIGAS_E_PILARES_472_CARLOS\\vigas_superior_472_carlos.xlsx", engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
+              os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}') 
+              with pd.ExcelWriter(f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}\\vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.jpg", engine='openpyxl',mode='a', if_sheet_exists='overlay') as writer: 
                 self.df.to_excel(writer, sheet_name='Sheet1', startrow=writer.sheets["Sheet1"].max_row, index=False, header=False)
 
   def carregar_imagem(self):
@@ -128,7 +133,6 @@ class planta_vigapilar:
     a = re.finditer(self.exre['padrao_n_planta'], self.caminho_img)
     for i in a:
       self.nome_imagem = i[0]  
-      #self.nome_imagem = self.nome_imagem.lower() sem necessidade?
     b = self.nome_imagem.split('.')
     info_nome = b[0].split("-")
     info_nome = list(map(lambda x: x.strip(), info_nome))
@@ -149,7 +153,7 @@ class planta_vigapilar:
     img_virada = np.array(img_virada)
     self.img_virada = img_virada
   
-  def add_info_list(self, resultado): #adicionar tratamento de erro p viga com 3 caracteres colado ou solto apos 'V'
+  def add_info_list(self, resultado):
     for i in range(len(resultado['text'])): 
       if float(resultado['conf'][i]) > self.min_conf:
         resultado['text'][i] = resultado['text'][i].strip()
@@ -169,9 +173,6 @@ class planta_vigapilar:
           self.vigas_tam.append(a[0])
           b = re.search(self.exre["p_nome_1"], resultado['text'][i]) if len(resultado['text'][i]) == 7 else re.search(self.exre["p_nome_2"], resultado['text'][i])
           self.vigas_nome.append(b[0])
-        #adicionando tratamento de erro v3
-        #if re.match():
-          #pass
 
   def dividir_tam_viga(self):
     for i in range(len(self.vigas_tam)):
@@ -198,7 +199,7 @@ class planta_vigapilar:
     if f"VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}" not in lista_arquivos:
       os.mkdir(f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}')
     os.rename(f'vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx', f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/vigas_{self.pavimento}_{self.n_obra}_{self.nome_cliente}.xlsx')           
-    os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/{self.caminho_img}') 
+    os.rename(self.caminho_img, f'VIGAS_E_PILARES_{self.n_obra}_{self.nome_cliente.upper()}/planta-vp-{self.pavimento}-{self.n_obra}-{self.nome_cliente}.jpg') 
 
   def listar_arquivos_prontos(self, pasta):
     self.lista_arquivos = os.listdir(pasta)
@@ -208,3 +209,5 @@ class planta_vigapilar:
         elif re.match(self.exre['padrao_nome_excel_generico'], arquivo):
             self.lista_excel_pronto.append(arquivo)
 
+planta = planta_vigapilar()
+planta.ler_plantas_automaticamente()
