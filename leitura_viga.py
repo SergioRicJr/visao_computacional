@@ -9,12 +9,6 @@ from pytesseract import Output
 import numpy as np
 import cv2 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe" 
-#arrumar caminho tesseract dependendo do computador
-#usar sempre alta definicao ---- 13500X13500 DEU CERTO
-#usar '_' para dividir nomes do pavimento -- ex terreo_interno_2
-
-
-
 
 class planta_vigapilar:
   def __init__(self):
@@ -36,7 +30,6 @@ class planta_vigapilar:
         'p_nome_viga':  '^(V|v)[0-9]{1,2}$',
         'p_nome_viga_colado': '(V|v)[0-9]{1,2}',
         'p_nome_viga_completo': '^(V|v)[0-9]{1,2}[0-9]{2}(x|X)[0-9]{2}$',
-        #'padrao_n_planta_correto': f'(Planta|planta|PLANTA)-(vp|VP|Vp)-{self.pavimento}-{self.n_obra}-{self.nome_cliente}\.(jpg|png|pdf)'
     }
     self.min_conf = 0
     self.lista_excel_pronto = []
@@ -44,7 +37,7 @@ class planta_vigapilar:
     self.lista_arquivos = os.listdir(os.getcwd())
     self.imagens_lidas = []
 
-  def iniciar_processo_individual(self):  #algo de errado aqui, o not do criar pasta esta invertido
+  def iniciar_processo_individual(self):
     lista_arquivos = os.listdir(os.getcwd())
     self.listar_arquivos_prontos(self.diretorio)
     self.lista_arquivos = os.listdir(os.getcwd())
@@ -138,7 +131,7 @@ class planta_vigapilar:
   def carregar_imagem(self):
     self.caminho_img = input('Digite o nome da imagem: ')
     self.img = cv2.imread(self.caminho_img)
-    self.img = cv2.cvtColor(self.img, cv2.COLOR_BGRA2GRAY) #binarizar imagem depois para ver se melhora performance
+    self.img = cv2.cvtColor(self.img, cv2.COLOR_BGRA2GRAY) 
     _, self.img = cv2.threshold(self.img, 90, 255, cv2.THRESH_BINARY)
 
   def informacoes_nome(self):
@@ -227,8 +220,6 @@ class planta_vigapilar:
           self.imagens_lidas.append(arquivo)
 
 planta = planta_vigapilar()
-
-#EXPERENCIA DO USUARIO --- 
 
 escolha = int(input("""
 ------------------------------------------------------ 
