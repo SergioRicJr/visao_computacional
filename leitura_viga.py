@@ -108,7 +108,7 @@ class planta_vigapilar:
                 self.exportar_df()
 
             else:
-              print('O arquivo excel já existe')
+              print(f'O arquivo excel vigas_{pavimento}_{n_obra}_{nome_cliente}.xlsx já existe')
               self.caminho_img = arquivo
               self.img = cv2.imread(self.caminho_img)
               self.ler_imagem(self.img)
@@ -220,6 +220,20 @@ class planta_vigapilar:
           self.imagens_lidas.append(arquivo)
 
 planta = planta_vigapilar()
+# planta.ler_plantas_automaticamente()
+# planta.iniciar_processo_individual()
+# planta.carregar_imagem()
+# planta.informacoes_nome()
+# print(planta.pavimento, planta.n_obra, planta.nome_cliente, sep='\n')
+# print(planta.lista_arquivos)
+# planta.listar_arquivos_prontos(planta.diretorio)
+# print(planta.lista_excel_pronto)
+
+
+
+
+
+
 
 escolha = int(input("""
 ------------------------------------------------------ 
@@ -235,15 +249,21 @@ while True:
   imagens_lidas = []
   imagens_prontas = []
   planta.imagens_lidas = []
+  contagem = []
   if escolha == 1:
     planta.listar_arquivos_prontos(os.getcwd())
     for i in planta.imagens_lidas:
       imagens_lidas.append(i.lower())
     for i in imagens_lidas: 
       if imagens_lidas.count(i) > 1:
+        contagem.append(imagens_lidas.count(i))
         imagens_prontas.append(i)
-    print(f'Os arquivos já feitos são: {str(set(imagens_prontas)).strip("{}").replace(","," e")}')
+    if not 2 in contagem:
+      print('Nenhuma das imagens para ser lidas já foi lida anteriormente')
+    else:
+      print(f'Os arquivos já feitos são: {str(set(imagens_prontas)).strip("{}").replace(","," e")}')
   elif escolha == 2:
+    planta = planta_vigapilar()
     planta.iniciar_processo_individual()
   elif escolha == 3:
     planta.ler_plantas_automaticamente()
