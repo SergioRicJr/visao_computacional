@@ -220,20 +220,6 @@ class planta_vigapilar:
           self.imagens_lidas.append(arquivo)
 
 planta = planta_vigapilar()
-# planta.ler_plantas_automaticamente()
-# planta.iniciar_processo_individual()
-# planta.carregar_imagem()
-# planta.informacoes_nome()
-# print(planta.pavimento, planta.n_obra, planta.nome_cliente, sep='\n')
-# print(planta.lista_arquivos)
-# planta.listar_arquivos_prontos(planta.diretorio)
-# print(planta.lista_excel_pronto)
-
-
-
-
-
-
 
 escolha = int(input("""
 ------------------------------------------------------ 
