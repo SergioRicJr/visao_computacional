@@ -8,7 +8,7 @@ import pytesseract
 from pytesseract import Output
 import numpy as np
 import cv2 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe" 
+pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe" 
 
 class planta_vigapilar:
   def __init__(self):
