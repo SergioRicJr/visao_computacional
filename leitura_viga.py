@@ -8,7 +8,7 @@ import pytesseract
 from pytesseract import Output
 import numpy as np
 import cv2 
-pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe" 
+pytesseract.pytesseract.tesseract_cmd = os.getcwd() + "\\Tesseract-OCR\\tesseract.exe"
 
 class planta_vigapilar:
   def __init__(self):
@@ -212,7 +212,7 @@ class planta_vigapilar:
   def listar_arquivos_prontos(self, pasta):
     self.lista_arquivos = os.listdir(pasta)
     for arquivo in self.lista_arquivos:
-        if not re.match(self.exre['padrao_nao_pastas'], arquivo) and arquivo != '.git':
+        if not re.match(self.exre['padrao_nao_pastas'], arquivo) and arquivo != '.git' and arquivo != 'venv' and arquivo != 'Tesseract-OCR':
           self.listar_arquivos_prontos(arquivo)
         elif re.match(self.exre['padrao_nome_excel_generico'], arquivo):
           self.lista_excel_pronto.append(arquivo)
